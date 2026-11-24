@@ -7,6 +7,9 @@
 
 脚本把外框按 `6 / 20 / 6` 九宫格切开，组合出 16 种四邻接状态、角块，以及 Create 使用的 47 格八方向（OMNIDIRECTIONAL）总表；再由此无损/有损地派生出其余七种布局。
 
+> [!NOTE]
+> 目前只有 `OMNIDIRECTIONAL`（omni）和 `RECTANGLE` 两种布局确认没有问题，其余布局可能仍存在瑕疵。欢迎熟悉 Create CTM 的同学帮忙找茬，提 issue 或 PR 都行。
+
 ## 依赖
 
 - Python 3.8+
