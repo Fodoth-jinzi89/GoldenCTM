@@ -434,6 +434,9 @@ def find_marks(corner_sheet, recolour=None):
 
     A mark is the opaque pixels of each quadrant, not the darker ones: a template is often drawn in
     arbitrary colours that carry position rather than tone, and a luminance threshold finds nothing.
+
+    A quadrant with no opaque pixels is not an error: an all-transparent corner tile is how "no marks"
+    is asked for, and the cell is then left as the plain 4x4 piece.
     """
     width, height = corner_sheet.size
     half_w, half_h = width // 2, height // 2
@@ -449,7 +452,7 @@ def find_marks(corner_sheet, recolour=None):
     for name, (x0, y0, x1, y1) in quadrants.items():
         found = [(x, y) for y in range(y0, y1) for x in range(x0, x1) if pixels[x, y][3] > 16]
         if not found:
-            raise ValueError(f"no mark found in the {name} quadrant")
+            continue
         left = min(x for x, _ in found)
         top = min(y for _, y in found)
         right = max(x for x, _ in found) + 1
@@ -516,6 +519,8 @@ def convert_to_omni(ct_sheet, corner_sheet, recolour=None, flip_marks=True):
     for index, (source, needs) in sorted(table.items()):
         tile = cells[source].copy()
         for quadrant in sorted(needs):
+            if quadrant not in marks:
+                continue
             mark = marks[quadrant]
             if flip_marks:
                 # Turn the mark about its own centre; the anchor below stays put.
